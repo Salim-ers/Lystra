@@ -1,0 +1,27 @@
+{
+  "name": "Lystra — Marketplace de prestataires événementiels",
+  "short_name": "Lystra",
+  "description": "Trouvez et réservez les meilleurs prestataires pour vos événements d'exception.",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBF7F0",
+  "theme_color": "#24121F",
+  "categories": ["events", "lifestyle", "shopping"],
+  "icons": [
+    {
+      "src": "/brand/lystra-mark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/brand/lystra-logo.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

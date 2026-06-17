@@ -1,0 +1,130 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ---- Lystra semantic tokens (HSL, consumed by tailwind.config) ---- */
+    --background: 38 48% 96%;          /* ivory  #FBF7F0 */
+    --foreground: 318 33% 11%;         /* ink    #24121F */
+
+    --card: 40 60% 98%;                /* cream  #FFF9F1 */
+    --card-foreground: 318 33% 11%;
+
+    --popover: 40 60% 98%;
+    --popover-foreground: 318 33% 11%;
+
+    --primary: 312 45% 16%;            /* plum   #3A1633 */
+    --primary-foreground: 40 60% 97%;
+
+    --secondary: 37 42% 91%;           /* soft champagne tint */
+    --secondary-foreground: 312 45% 18%;
+
+    --muted: 38 30% 93%;
+    --muted-foreground: 321 8% 42%;    /* soft gray #8C7E87 (darkened for AA) */
+
+    --accent: 37 52% 66%;              /* champagne #D8B47A */
+    --accent-foreground: 318 33% 11%;
+
+    --destructive: 0 62% 48%;
+    --destructive-foreground: 40 60% 97%;
+
+    --border: 37 34% 85%;              /* champagne hairline */
+    --input: 37 30% 87%;
+    --ring: 37 52% 58%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 312 37% 7%;          /* dark   #180B16 */
+    --foreground: 40 50% 95%;
+    --card: 312 40% 10%;
+    --card-foreground: 40 50% 95%;
+    --popover: 312 40% 10%;
+    --popover-foreground: 40 50% 95%;
+    --primary: 37 52% 66%;             /* champagne becomes the action color on dark */
+    --primary-foreground: 312 45% 12%;
+    --secondary: 312 30% 16%;
+    --secondary-foreground: 40 50% 95%;
+    --muted: 312 24% 15%;
+    --muted-foreground: 37 20% 70%;
+    --accent: 37 52% 66%;
+    --accent-foreground: 312 45% 12%;
+    --border: 37 30% 24%;
+    --input: 37 22% 22%;
+    --ring: 37 52% 58%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "cv01", "cv11";
+  }
+  ::selection {
+    background: hsl(37 52% 66% / 0.4);
+    color: hsl(318 33% 11%);
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+  }
+}
+
+@layer components {
+  /* Editorial eyebrow label */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[0.72rem] font-medium uppercase tracking-eyebrow text-lystra-gray;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-lystra-champagne/80;
+  }
+
+  /* Hairline champagne rule used between sections */
+  .rule-champagne {
+    height: 1px;
+    background-image: theme("backgroundImage.champagne-line");
+  }
+
+  /* Display heading helper */
+  .display {
+    @apply font-serif tracking-tightish text-foreground;
+    line-height: 1.04;
+  }
+
+  /* Frosted utility bar / floating search */
+  .glass {
+    background: hsl(40 60% 99% / 0.78);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  /* Premium card baseline */
+  .card-premium {
+    @apply rounded-2xl border border-lystra-champagne/30 bg-card shadow-soft transition-all duration-300;
+  }
+  .card-premium:hover {
+    @apply shadow-card -translate-y-0.5 border-lystra-champagne/55;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .text-pretty { text-wrap: pretty; }
+  /* Hide scrollbar for horizontal scrollers */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
