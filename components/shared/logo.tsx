@@ -1,12 +1,11 @@
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { RibbonMark } from "./ribbon-mark";
 
 /**
- * Primary Lystra lockup: the ribbon mark + the wordmark set in Playfair.
- * Rendered as crisp vector + type so it sits cleanly on light or dark
- * surfaces (the supplied PNG carries a baked plum background and is reserved
- * for OG images / dark hero badges).
+ * Primary Lystra lockup: the brand mark (rose-gold ribbon on plum) set as a
+ * rounded badge next to the wordmark in Playfair. The mark PNG carries its own
+ * plum background, so it reads cleanly on both light and dark surfaces.
  */
 export function Logo({
   href = "/",
@@ -23,7 +22,17 @@ export function Logo({
 }) {
   const content = (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <RibbonMark className={cn("h-8 w-8 text-lystra-champagne", markClassName)} />
+      <Image
+        src="/brand/lystra-mark.png"
+        alt="Lystra"
+        width={44}
+        height={44}
+        priority
+        className={cn(
+          "h-9 w-9 rounded-xl object-cover shadow-soft ring-1 ring-lystra-champagne/30",
+          markClassName,
+        )}
+      />
       <span className="flex flex-col leading-none">
         <span
           className={cn(

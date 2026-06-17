@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Hero } from "@/components/marketing/hero";
-import { HeroSearch } from "@/components/marketing/hero-search";
 import { FamilyStrip } from "@/components/marketing/family-strip";
 import { MomentsSection } from "@/components/marketing/moments-section";
 import { ConciergeSection } from "@/components/marketing/concierge-section";
@@ -26,13 +25,8 @@ export default function HomePage() {
 
   return (
     <>
-      {/* ---------- HERO (light, editorial) ---------- */}
+      {/* ---------- HERO (full-bleed image + search) ---------- */}
       <Hero />
-
-      {/* ---------- FLOATING SEARCH ---------- */}
-      <div className="relative z-20 mx-auto -mt-6 max-w-6xl px-4 sm:px-6 lg:-mt-10">
-        <HeroSearch />
-      </div>
 
       {/* ---------- FAMILIES (breadth signal) ---------- */}
       <section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">

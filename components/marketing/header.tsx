@@ -1,15 +1,9 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/shared/logo";
-// Runs before first paint on the client (avoids a one-frame light-header flash
-// when the homepage is opened already scrolled, e.g. via /#comment-ca-marche),
-// while falling back to useEffect on the server to avoid SSR warnings.
-const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 import { Button } from "@/components/ui/button";
 import {
   Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetClose,
@@ -24,41 +18,32 @@ const NAV = [
 ];
 
 export function Header() {
-  const pathname = usePathname();
   const [scrolled, setScrolled] = React.useState(false);
-  useIsomorphicLayoutEffect(() => {
+  React.useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Homepage opens on a full-bleed dark hero → light header until the user scrolls.
-  const overHero = pathname === "/" && !scrolled;
-
+  // Clean, always-visible header (Airbnb / Malt): solid cream bar, dark text,
+  // a slightly stronger shadow once the page is scrolled.
   return (
     <header
       className={cn(
-        "sticky top-0 z-40 transition-all duration-300",
-        scrolled
-          ? "border-b border-lystra-champagne/25 bg-lystra-ivory/85 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent",
+        "sticky top-0 z-40 border-b bg-lystra-cream/90 backdrop-blur-md transition-shadow duration-300",
+        scrolled ? "border-lystra-champagne/25 shadow-soft" : "border-lystra-champagne/15",
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Logo tone={overHero ? "light" : "ink"} />
+        <Logo />
 
         <nav className="hidden items-center gap-8 md:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={cn(
-                "text-sm transition-colors",
-                overHero
-                  ? "text-lystra-cream/85 hover:text-lystra-cream"
-                  : "text-lystra-ink/80 hover:text-lystra-plum",
-              )}
+              className="text-sm text-lystra-ink/80 transition-colors hover:text-lystra-plum"
             >
               {item.label}
             </Link>
@@ -66,12 +51,7 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button
-            asChild
-            variant="ghost"
-            size="sm"
-            className={cn(overHero && "text-lystra-cream hover:bg-white/10 hover:text-lystra-cream")}
-          >
+          <Button asChild variant="ghost" size="sm">
             <Link href="/login">Connexion</Link>
           </Button>
           <Button asChild variant="champagne" size="sm">
@@ -83,12 +63,7 @@ export function Header() {
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="Menu"
-                className={cn(overHero && "text-lystra-cream hover:bg-white/10 hover:text-lystra-cream")}
-              >
+              <Button variant="ghost" size="icon" aria-label="Menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
