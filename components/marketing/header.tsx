@@ -12,8 +12,9 @@ import {
 const NAV = [
   { href: "/prestataires", label: "Prestataires" },
   { href: "/categories", label: "Catégories" },
+  { href: "/packs", label: "Packs" },
+  { href: "/conciergerie", label: "Conciergerie" },
   { href: "/devenir-prestataire", label: "Devenir prestataire" },
-  { href: "/pricing", label: "Tarifs" },
 ];
 
 export function Header() {

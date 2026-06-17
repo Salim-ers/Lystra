@@ -3,13 +3,14 @@ import { Euro, Inbox, Clock, Star, ArrowRight, Eye } from "lucide-react";
 import { DashboardShell } from "@/components/dashboard/dashboard-shell";
 import { DashboardStatCard } from "@/components/dashboard/dashboard-stat-card";
 import { StatusBadge } from "@/components/dashboard/status-badge";
+import { PerformanceScore } from "@/components/dashboard/performance-score";
 import { Button } from "@/components/ui/button";
-import { formatDateFr, formatPrice } from "@/lib/utils";
+import { formatDateFr } from "@/lib/utils";
 
 const REQUESTS = [
   { id: "r1", client: "Marie L.", event: "Mariage", date: "2026-09-12", status: "pending", guests: 120 },
   { id: "r2", client: "Thomas R.", event: "Anniversaire", date: "2026-07-04", status: "quoted", guests: 40 },
-  { id: "r3", client: "Sophie M.", event: "Baptême", date: "2026-10-20", status: "accepted", guests: 60 },
+  { id: "r3", client: "Sophie M.", event: "Baby shower", date: "2026-10-20", status: "accepted", guests: 60 },
 ];
 
 export default function VendorDashboardPage() {
@@ -69,10 +70,15 @@ export default function VendorDashboardPage() {
               </div>
             ))}
           </div>
+
+          {/* Performance score */}
+          <div className="mt-8">
+            <PerformanceScore />
+          </div>
         </div>
 
         {/* Profile completion */}
-        <div className="card-premium rounded-2xl border-lystra-champagne/25 bg-white/70 p-6">
+        <div className="card-premium h-fit rounded-2xl border-lystra-champagne/25 bg-white/70 p-6">
           <h3 className="font-serif text-lg text-lystra-ink">Profil complété</h3>
           <div className="mt-4 flex items-end gap-2">
             <span className="font-serif text-4xl text-lystra-plum">85 %</span>

@@ -42,7 +42,8 @@ export default function OnboardingPage() {
         <h1 className="mt-6 font-serif text-3xl text-lystra-ink">Bienvenue sur Lystra !</h1>
         <p className="mt-3 text-lystra-gray">
           Votre profil est en cours de vérification. Vous recevrez un email dès qu'il sera publié
-          (24–48 h). En attendant, explorez votre espace prestataire.
+          (24–48 h) et visible pour tous les moments d'exception. En attendant, explorez votre
+          espace prestataire.
         </p>
         <Button size="lg" className="mt-8" onClick={() => router.push("/dashboard/vendor")}>
           Accéder à mon espace <ArrowRight className="h-4 w-4" />
@@ -81,8 +82,11 @@ export default function OnboardingPage() {
         <div className="card-premium rounded-2xl border-lystra-champagne/25 bg-white/70 p-6 lg:p-8">
           {step === 0 && (
             <div>
-              <h2 className="font-serif text-2xl text-lystra-ink">Quelle est votre spécialité ?</h2>
-              <p className="mt-1 text-sm text-lystra-gray">Choisissez votre catégorie principale.</p>
+              <h2 className="font-serif text-2xl text-lystra-ink">Quel est votre métier ?</h2>
+              <p className="mt-1 text-sm text-lystra-gray">
+                Choisissez votre métier principal. Vous couvrirez ensuite tous les types
+                d'événements de votre choix.
+              </p>
               <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {CATEGORIES.map((c) => (
                   <button
@@ -136,7 +140,7 @@ export default function OnboardingPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="desc">Description</Label>
-                <Textarea id="desc" rows={4} placeholder="Décrivez votre univers, votre approche, vos prestations…" />
+                <Textarea id="desc" rows={4} placeholder="Décrivez votre univers, votre approche, et les moments que vous savez sublimer (mariage, anniversaire, événement pro, shooting…)" />
               </div>
             </div>
           )}

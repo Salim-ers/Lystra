@@ -25,8 +25,11 @@ export const metadata: Metadata = {
   description: SITE.description,
   applicationName: SITE.name,
   keywords: [
-    "prestataires événementiels", "mariage", "traiteur", "fleuriste",
-    "photographe", "wedding planner", "événement premium", "marketplace",
+    "prestataires événementiels", "coiffeur", "maquilleur", "photographe",
+    "vidéaste", "fleuriste", "traiteur", "DJ", "décorateur", "esthéticienne",
+    "nail artist", "chef privé", "lieu événementiel", "wedding planner",
+    "mariage", "anniversaire", "événement entreprise", "shooting photo",
+    "marketplace premium", "réservation", "conciergerie événementielle",
   ],
   openGraph: {
     type: "website",

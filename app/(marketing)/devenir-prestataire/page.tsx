@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Devenir prestataire",
   description:
-    "Développez votre activité événementielle auprès de clients qui préparent des événements d'exception. Rejoignez Lystra.",
+    "Développez votre activité auprès de clients qui préparent tous leurs moments d'exception : mariage, anniversaire, événement d'entreprise, shooting, soirée privée. Rejoignez Lystra.",
 };
 
 const BENEFITS = [
@@ -30,12 +30,12 @@ const BENEFITS = [
   {
     icon: Target,
     title: "Visibilité qualifiée",
-    text: "Soyez visible auprès de clients qui recherchent activement des prestataires d'exception.",
+    text: "Soyez visible auprès de clients qui réservent des talents pour tous leurs moments d'exception, du mariage à l'événement d'entreprise.",
   },
   {
     icon: Inbox,
-    title: "Demandes entrantes",
-    text: "Recevez des demandes de devis détaillées directement dans votre espace prestataire.",
+    title: "Réservation directe",
+    text: "Recevez des demandes détaillées et des réservations directes dans votre espace prestataire, sans intermédiaire.",
   },
   {
     icon: ShieldCheck,
@@ -44,20 +44,20 @@ const BENEFITS = [
   },
   {
     icon: CalendarCheck,
-    title: "Gestion des réservations",
-    text: "Gérez vos disponibilités, vos devis et vos réservations depuis un seul tableau de bord.",
+    title: "Packs & conciergerie",
+    text: "Apparaissez dans des packs par type d'événement et bénéficiez de l'accompagnement de notre conciergerie premium.",
   },
   {
     icon: Star,
-    title: "Avis clients",
-    text: "Construisez votre réputation avec des avis vérifiés après chaque événement réussi.",
+    title: "Score de profil",
+    text: "Suivez votre score de profil et vos avis vérifiés pour gagner en visibilité après chaque prestation réussie.",
   },
 ];
 
 const FAQ = [
   {
     q: "Comment fonctionne l'inscription ?",
-    a: "Créez votre compte prestataire, complétez votre profil (catégorie, description, photos, tarifs) et choisissez votre abonnement. Votre profil est ensuite vérifié par notre équipe avant publication.",
+    a: "Créez votre compte prestataire, choisissez votre métier (photographe, traiteur, fleuriste, DJ…), complétez votre profil (description, photos, tarifs, types d'événements couverts) et sélectionnez votre abonnement. Votre profil est ensuite vérifié par notre équipe avant publication.",
   },
   {
     q: "Combien de temps pour être validé ?",
@@ -73,19 +73,22 @@ export default function BecomeVendorPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-plum-deep py-20 text-lystra-cream lg:py-28">
+      <section className="relative overflow-hidden bg-ivory-fade py-20 lg:py-28">
+        <div className="pointer-events-none absolute -right-32 -top-24 h-[32rem] w-[32rem] rounded-full bg-lystra-champagne/15 blur-3xl" />
+        <div className="pointer-events-none absolute -left-24 top-40 h-72 w-72 rounded-full bg-lystra-rose/10 blur-3xl" />
         <RibbonMark
-          className="pointer-events-none absolute -right-24 top-0 h-[34rem] w-[34rem] text-lystra-champagne/10"
+          className="pointer-events-none absolute -right-24 top-0 hidden h-[34rem] w-[34rem] text-lystra-champagne/[0.07] lg:block"
           withDots={false}
         />
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <p className="eyebrow justify-center text-lystra-champagne">Espace prestataires</p>
-          <h1 className="display mt-4 text-balance text-4xl leading-[1.1] lg:text-6xl">
-            Développez votre activité auprès de clients d'exception.
+        <div className="relative mx-auto max-w-4xl px-6 text-center">
+          <p className="eyebrow justify-center text-[#8a6a2f]">Espace prestataires</p>
+          <h1 className="display mt-4 text-balance text-4xl leading-[1.1] text-lystra-ink lg:text-6xl">
+            Vos talents, pour tous les moments d'exception.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-lystra-cream/75">
-            Rejoignez une sélection de prestataires premium et recevez des demandes qualifiées de
-            clients qui préparent leurs plus beaux événements.
+          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-lystra-gray">
+            Rejoignez une sélection de talents premium et recevez des demandes qualifiées de clients
+            qui réservent pour leurs plus beaux moments : mariage, anniversaire, événement
+            d'entreprise, shooting, soirée privée et bien plus.
           </p>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Button asChild size="lg">
@@ -93,7 +96,7 @@ export default function BecomeVendorPage() {
                 Créer mon profil <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-lystra-champagne/40 text-lystra-cream hover:bg-white/10">
+            <Button asChild size="lg" variant="outline">
               <Link href="/pricing">Voir les tarifs</Link>
             </Button>
           </div>
@@ -106,7 +109,7 @@ export default function BecomeVendorPage() {
           <SectionHeading
             eyebrow="Pourquoi Lystra"
             title="Tout ce qu'il vous faut pour rayonner"
-            intro="Une plateforme pensée pour les professionnels de l'événementiel exigeants."
+            intro="Une plateforme pensée pour les talents exigeants, quel que soit votre métier."
             align="center"
           />
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

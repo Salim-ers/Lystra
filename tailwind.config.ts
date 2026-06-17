@@ -30,7 +30,7 @@ const config: Config = {
           plum: "#3A1633",       // accent prune profond
           rose: "#D9A6A0",       // rose poudré
           dark: "#180B16",       // fond sombre premium
-          gray: "#8C7E87",       // gris doux
+          gray: "#6E6168",       // gris doux (AA ≥ 4.5:1 sur fonds clairs)
         },
         // ---- shadcn semantic tokens (driven by CSS vars in globals.css) ----
         border: "hsl(var(--border))",

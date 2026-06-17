@@ -6,28 +6,34 @@ import { SITE } from "@/lib/constants";
 
 const COLUMNS = [
   {
-    title: "Explorer",
+    title: "Talents",
     links: [
-      { href: "/prestataires", label: "Tous les prestataires" },
-      { href: "/categories", label: "Catégories" },
-      { href: "/prestataires?sort=rating", label: "Les mieux notés" },
-      { href: "/prestataires?elite=1", label: "Sélection Elite" },
+      { href: "/coiffeur", label: "Coiffeurs" },
+      { href: "/maquilleur", label: "Maquilleurs" },
+      { href: "/photographe", label: "Photographes" },
+      { href: "/traiteur", label: "Traiteurs" },
+      { href: "/dj", label: "DJ" },
+      { href: "/categories", label: "Toutes les catégories" },
     ],
   },
   {
-    title: "Prestataires",
+    title: "Villes",
     links: [
-      { href: "/devenir-prestataire", label: "Devenir prestataire" },
-      { href: "/pricing", label: "Tarifs & abonnements" },
-      { href: "/login", label: "Espace prestataire" },
+      { href: "/photographe/paris", label: "Photographe à Paris" },
+      { href: "/coiffeur/lyon", label: "Coiffeur à Lyon" },
+      { href: "/maquilleur/marseille", label: "Maquilleur à Marseille" },
+      { href: "/traiteur/bordeaux", label: "Traiteur à Bordeaux" },
+      { href: "/dj/nice", label: "DJ à Nice" },
     ],
   },
   {
     title: "Lystra",
     links: [
+      { href: "/packs", label: "Packs événementiels" },
+      { href: "/conciergerie", label: "Conciergerie" },
+      { href: "/devenir-prestataire", label: "Devenir prestataire" },
+      { href: "/pricing", label: "Tarifs & abonnements" },
       { href: "/#comment-ca-marche", label: "Comment ça marche" },
-      { href: "/#confiance", label: "Confiance & sécurité" },
-      { href: "/#temoignages", label: "Témoignages" },
     ],
   },
 ];

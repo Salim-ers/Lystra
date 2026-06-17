@@ -1,17 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, Star, Home, Zap } from "lucide-react";
 import type { Vendor } from "@/types";
-import { RatingStars } from "@/components/shared/rating-stars";
+import { formatPrice } from "@/lib/utils";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { VerifiedBadge, EliteBadge } from "@/components/shared/verified-badge";
-import { PriceBadge } from "@/components/shared/price-badge";
+import { AvailabilityBadge } from "@/components/shared/availability-badge";
 
 export function VendorCard({ vendor, priority = false }: { vendor: Vendor; priority?: boolean }) {
+  const zone = vendor.homeService ? "À domicile" : vendor.studioService ? "En studio" : "Sur lieu";
+  const events = (vendor.eventTypes ?? []).slice(0, 3).join(" · ");
+
   return (
     <Link
       href={`/prestataires/${vendor.slug}`}
-      className="group block overflow-hidden rounded-2xl border border-lystra-champagne/25 bg-white/70 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-lystra-champagne/25 bg-white/70 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-card"
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <Image
@@ -25,36 +28,49 @@ export function VendorCard({ vendor, priority = false }: { vendor: Vendor; prior
         <div className="absolute right-3 top-3">
           <FavoriteButton vendorSlug={vendor.slug} />
         </div>
-        {vendor.isElite && (
-          <div className="absolute left-3 top-3">
-            <EliteBadge />
-          </div>
-        )}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-lystra-ink/30 to-transparent" />
+        <div className="absolute left-3 top-3 flex flex-col items-start gap-1.5">
+          {vendor.isElite ? <EliteBadge /> : vendor.isVerified && <VerifiedBadge />}
+        </div>
+        <div className="absolute bottom-3 left-3">
+          <AvailabilityBadge status={vendor.availability} className="bg-white/90 backdrop-blur-sm" />
+        </div>
       </div>
 
-      <div className="space-y-2 p-4">
+      <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h3 className="truncate font-serif text-lg text-lystra-ink">{vendor.businessName}</h3>
-            <p className="mt-0.5 flex items-center gap-1 text-sm text-lystra-gray">
-              <span className="truncate">{vendor.categoryName}</span>
-              <span className="text-lystra-champagne/60">·</span>
-              <MapPin className="h-3 w-3 shrink-0" />
-              <span className="truncate">{vendor.city}</span>
-            </p>
+            <p className="truncate text-sm text-lystra-gray">{vendor.categoryName}</p>
           </div>
+          <span className="inline-flex shrink-0 items-center gap-1 text-sm">
+            <Star className="h-3.5 w-3.5 fill-lystra-champagne text-lystra-champagne" />
+            <strong className="font-medium text-lystra-ink">{vendor.averageRating.toFixed(1)}</strong>
+            <span className="text-lystra-gray">({vendor.reviewsCount})</span>
+          </span>
         </div>
 
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <RatingStars rating={vendor.averageRating} count={vendor.reviewsCount} />
-          {vendor.isVerified && !vendor.isElite && <VerifiedBadge />}
-        </div>
+        <p className="flex items-center gap-1.5 text-sm text-lystra-gray">
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-lystra-champagne" />
+          <span className="truncate">{vendor.city}</span>
+          <span className="text-lystra-champagne/50">·</span>
+          <span className="inline-flex items-center gap-1 whitespace-nowrap">
+            {vendor.homeService && <Home className="h-3 w-3" />}{zone}
+          </span>
+        </p>
 
-        <div className="flex items-center justify-between border-t border-lystra-champagne/15 pt-3">
-          <PriceBadge price={vendor.startingPrice} />
-          {vendor.responseTime && (
-            <span className="text-xs text-lystra-gray">Répond {vendor.responseTime}</span>
+        {events && <p className="truncate text-xs text-lystra-gray/90">{events}</p>}
+
+        <div className="mt-auto flex items-center justify-between border-t border-lystra-champagne/15 pt-3">
+          <p className="text-sm">
+            <span className="text-lystra-gray">À partir de </span>
+            <strong className="font-serif text-base text-lystra-ink">{formatPrice(vendor.startingPrice)}</strong>
+          </p>
+          {vendor.bookingEnabled ? (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-lystra-plum">
+              <Zap className="h-3 w-3 text-lystra-champagne" /> Réservation directe
+            </span>
+          ) : (
+            <span className="text-xs font-medium text-lystra-plum">Voir le profil →</span>
           )}
         </div>
       </div>

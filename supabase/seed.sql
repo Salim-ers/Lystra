@@ -5,19 +5,22 @@
 -- =====================================================================
 
 -- ---------------- CATEGORIES ----------------
+-- Métiers GÉNÉRIQUES (jamais enfermés dans "mariage"). Le type d'événement est un filtre séparé.
 insert into public.categories (slug, name, icon, description, sort_order) values
-  ('coiffure-mariage',     'Coiffure mariage',            'Scissors',        'Coiffeurs spécialisés mariages et cérémonies.', 1),
-  ('maquillage',           'Maquillage',                  'Sparkles',        'Maquilleurs professionnels pour vos évènements.', 2),
-  ('fleuristes',           'Fleuristes',                  'Flower2',         'Compositions et scénographies florales sur mesure.', 3),
-  ('photographes',         'Photographes',                'Camera',          'Reportages photo élégants et intemporels.', 4),
-  ('videastes',            'Vidéastes',                   'Video',           'Films d''évènement cinématographiques.', 5),
-  ('traiteurs',            'Traiteurs',                   'UtensilsCrossed', 'Gastronomie et service premium.', 6),
-  ('wedding-planners',     'Wedding planners',            'ClipboardList',   'Organisation complète de A à Z.', 7),
-  ('decoration',           'Décoration',                  'Palette',         'Décorateurs et scénographes d''exception.', 8),
-  ('lieux-de-reception',   'Lieux de réception',          'Building2',       'Domaines, châteaux et lieux d''exception.', 9),
-  ('dj-musique',           'DJ & musique',                'Disc3',           'DJ, groupes et ambiances sonores premium.', 10),
-  ('patisserie',           'Pâtisserie & wedding cake',   'CakeSlice',       'Wedding cakes et créations sucrées.', 11),
-  ('son-lumiere',          'Son & lumière',               'Lightbulb',       'Mise en lumière et sonorisation événementielle.', 12)
+  ('coiffeur',             'Coiffeur / Coiffeuse',        'Scissors',        'Coiffure pour tous vos moments d''exception.', 1),
+  ('maquilleur',           'Maquilleur / Maquilleuse',    'Sparkles',        'Mise en beauté longue tenue, à domicile ou en studio.', 2),
+  ('estheticienne',        'Esthéticienne',               'Gem',             'Soins et préparation beauté avant l''événement.', 3),
+  ('photographe',          'Photographe',                 'Camera',          'Reportages photo élégants et intemporels.', 4),
+  ('videaste',             'Vidéaste',                    'Video',           'Films d''événement cinématographiques.', 5),
+  ('content-creator',      'Content creator événementiel','Clapperboard',    'Reels et contenus social media pour vos événements.', 6),
+  ('fleuriste',            'Fleuriste',                   'Flower2',         'Compositions et scénographies florales sur mesure.', 7),
+  ('decorateur',           'Décorateur événementiel',     'Palette',         'Décorateurs et scénographes d''exception.', 8),
+  ('traiteur',             'Traiteur',                    'UtensilsCrossed', 'Gastronomie et service premium.', 9),
+  ('chef-prive',           'Chef privé',                  'ChefHat',         'Dîners privés et expériences gastronomiques.', 10),
+  ('patissier',            'Pâtissier',                   'CakeSlice',       'Pièces montées, layer cakes et desserts signatures.', 11),
+  ('dj',                   'DJ',                          'Disc3',           'DJ, sets et ambiances sonores premium.', 12),
+  ('lieu-evenementiel',    'Lieu de réception',           'Building2',       'Domaines, villas, rooftops et lieux atypiques.', 13),
+  ('wedding-planner',      'Wedding planner',             'ClipboardList',   'Organisation complète de A à Z.', 14)
 on conflict (slug) do nothing;
 
 -- ---------------- SETTINGS ----------------
@@ -55,21 +58,21 @@ insert into public.vendors
    average_rating, reviews_count, is_verified, is_featured, is_elite, is_published, home_service, response_time, cover_url)
 select * from (values
   ('00000000-0000-0000-0000-00000000d001'::uuid, '00000000-0000-0000-0000-0000000000a1'::uuid,
-   'Atelier Roselia', 'atelier-roselia', 'Fleuriste événementiel — l''art floral comme signature',
-   'Atelier floral parisien dédié aux mariages et événements d''exception.',
-   (select id from cat where slug='fleuristes'), 'Paris', 1200, 4.9, 87, true, true, true, true, true, '< 2h',
+   'Atelier Roselia', 'atelier-roselia', 'Fleuriste — l''art floral comme signature',
+   'Atelier floral parisien pour vos moments d''exception, de la cérémonie au dîner.',
+   (select id from cat where slug='fleuriste'), 'Paris', 1200, 4.9, 87, true, true, true, true, true, '< 2h',
    'https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1200&q=80'),
 
   ('00000000-0000-0000-0000-00000000d002'::uuid, '00000000-0000-0000-0000-0000000000a1'::uuid,
    'Lumière Studio', 'lumiere-studio', 'Photographie d''événement — la lumière, toujours',
    'Photographes d''événement basés à Bordeaux. Approche éditoriale et naturelle.',
-   (select id from cat where slug='photographes'), 'Bordeaux', 1500, 4.9, 132, true, true, false, true, false, '< 1h',
+   (select id from cat where slug='photographe'), 'Bordeaux', 1500, 4.9, 132, true, true, false, true, false, '< 1h',
    'https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=1200&q=80'),
 
   ('00000000-0000-0000-0000-00000000d003'::uuid, '00000000-0000-0000-0000-0000000000a1'::uuid,
    'Éclat Traiteur', 'eclat-traiteur', 'Traiteur premium — la table comme spectacle',
    'Maison traiteur marseillaise, cuisine méditerranéenne raffinée.',
-   (select id from cat where slug='traiteurs'), 'Marseille', 75, 4.8, 98, true, true, true, true, false, '< 2h',
+   (select id from cat where slug='traiteur'), 'Marseille', 75, 4.8, 98, true, true, true, true, false, '< 2h',
    'https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&w=1200&q=80')
 ) as v
 on conflict (id) do nothing;

@@ -21,7 +21,7 @@ const CONVERSATIONS: Conversation[] = [
     preview: "Je reviens vers vous très vite.",
     time: "Hier",
     messages: [
-      { id: "m1", fromMe: true, body: "Bonjour, quelles sont vos formules pour un mariage ?", time: "Hier" },
+      { id: "m1", fromMe: true, body: "Bonjour, quelles sont vos formules pour une soirée privée ?", time: "Hier" },
       { id: "m2", fromMe: false, body: "Bonjour ! Je reviens vers vous très vite avec le détail.", time: "Hier" },
     ],
   },
@@ -38,7 +38,7 @@ const CONVERSATIONS: Conversation[] = [
 
 export default function ClientMessagesPage() {
   return (
-    <DashboardShell role="client" title="Messages" subtitle="Échangez avec vos prestataires.">
+    <DashboardShell role="client" title="Messages" subtitle="Échangez avec vos talents.">
       <MessageThread conversations={CONVERSATIONS} />
     </DashboardShell>
   );

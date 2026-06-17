@@ -31,8 +31,8 @@ export default function RegisterPage({
       <h1 className="font-serif text-3xl text-lystra-ink">Créer votre compte</h1>
       <p className="mt-2 text-sm text-lystra-gray">
         {role === "vendor"
-          ? "Rejoignez les prestataires d'exception de Lystra."
-          : "Trouvez et réservez les meilleurs prestataires."}
+          ? "Rejoignez les talents d'exception de Lystra, réservés pour tous les moments."
+          : "Trouvez et réservez les meilleurs talents pour tous vos moments."}
       </p>
 
       {/* Role switch */}
@@ -63,7 +63,7 @@ export default function RegisterPage({
         >
           <Briefcase className={cn("h-5 w-5", role === "vendor" ? "text-lystra-plum" : "text-lystra-gray")} />
           <span className="text-sm font-medium text-lystra-ink">Je suis prestataire</span>
-          <span className="text-xs text-lystra-gray">Je propose mes services</span>
+          <span className="text-xs text-lystra-gray">Je propose mon talent</span>
         </button>
       </div>
 

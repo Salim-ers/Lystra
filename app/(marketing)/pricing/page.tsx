@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Tarifs prestataires",
   description:
-    "Des abonnements clairs pour développer votre activité événementielle sur Lystra. Starter, Pro et Elite.",
+    "Des abonnements clairs pour développer votre activité et réserver de nouveaux moments d'exception sur Lystra. Starter, Pro et Elite.",
 };
 
 const FAQ = [
@@ -28,7 +28,7 @@ const FAQ = [
   },
   {
     q: "Quand suis-je payé pour mes prestations ?",
-    a: "Les paiements clients sont sécurisés via Stripe. Les fonds vous sont reversés sur votre compte après l'événement, déduction faite de la commission Lystra.",
+    a: "Les paiements clients sont sécurisés via Stripe. Les fonds vous sont reversés sur votre compte après le moment réservé, déduction faite de la commission Lystra.",
   },
 ];
 
@@ -36,19 +36,20 @@ export default function PricingPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-plum-deep py-20 text-lystra-cream lg:py-28">
+      <section className="relative overflow-hidden bg-ivory-fade py-20 lg:py-28">
+        <div className="pointer-events-none absolute -right-32 -top-24 h-[32rem] w-[32rem] rounded-full bg-lystra-champagne/15 blur-3xl" />
         <RibbonMark
-          className="pointer-events-none absolute -right-16 top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 text-lystra-champagne/10"
+          className="pointer-events-none absolute -right-16 top-1/2 hidden h-[28rem] w-[28rem] -translate-y-1/2 text-lystra-champagne/[0.07] lg:block"
           withDots={false}
         />
-        <div className="mx-auto max-w-4xl px-6 text-center">
-          <p className="eyebrow justify-center text-lystra-champagne">Tarifs prestataires</p>
-          <h1 className="display mt-4 text-balance text-4xl leading-[1.1] lg:text-6xl">
+        <div className="relative mx-auto max-w-4xl px-6 text-center">
+          <p className="eyebrow justify-center text-[#8a6a2f]">Tarifs prestataires</p>
+          <h1 className="display mt-4 text-balance text-4xl leading-[1.1] text-lystra-ink lg:text-6xl">
             Investissez dans votre visibilité, pas dans la complexité.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-lystra-cream/75">
-            Choisissez l'offre qui correspond à votre ambition. Sans engagement, résiliable à tout
-            moment.
+          <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg text-lystra-gray">
+            Choisissez l'offre qui correspond à votre ambition et soyez réservé·e pour tous les
+            moments d'exception. Sans engagement, résiliable à tout moment.
           </p>
         </div>
       </section>

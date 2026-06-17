@@ -4,9 +4,9 @@ import { MarketplaceClient } from "@/components/marketplace/marketplace-client";
 import { LoadingGrid } from "@/components/shared/loading-state";
 
 export const metadata: Metadata = {
-  title: "Prestataires événementiels",
+  title: "Tous les talents — beauté, image, déco, lieux & événementiel",
   description:
-    "Parcourez les prestataires événementiels premium de Lystra : fleuristes, photographes, traiteurs, décorateurs et lieux de réception sélectionnés.",
+    "Parcourez, comparez et réservez les meilleurs talents premium de Lystra : coiffeurs, maquilleurs, photographes, vidéastes, fleuristes, traiteurs, DJ, lieux et bien plus — pour tous vos moments d'exception.",
 };
 
 export default function PrestatairesPage() {

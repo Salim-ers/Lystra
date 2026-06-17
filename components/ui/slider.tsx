@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
+>(({ className, "aria-label": ariaLabel, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
     className={cn("relative flex w-full touch-none select-none items-center", className)}
@@ -15,13 +15,15 @@ const Slider = React.forwardRef<
     <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-lystra-champagne/25">
       <SliderPrimitive.Range className="absolute h-full bg-lystra-champagne" />
     </SliderPrimitive.Track>
-    {props.value?.map((_, i) => (
+    {props.value?.map((v, i) => (
       <SliderPrimitive.Thumb
         key={i}
+        aria-label={ariaLabel}
+        aria-valuetext={String(v)}
         className="block h-5 w-5 rounded-full border-2 border-lystra-champagne bg-lystra-cream shadow-soft ring-offset-background transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lystra-champagne/50 disabled:pointer-events-none disabled:opacity-50"
       />
     )) ?? (
-      <SliderPrimitive.Thumb className="block h-5 w-5 rounded-full border-2 border-lystra-champagne bg-lystra-cream shadow-soft" />
+      <SliderPrimitive.Thumb aria-label={ariaLabel} className="block h-5 w-5 rounded-full border-2 border-lystra-champagne bg-lystra-cream shadow-soft" />
     )}
   </SliderPrimitive.Root>
 ));

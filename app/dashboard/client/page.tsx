@@ -8,8 +8,8 @@ import { getFeaturedVendors } from "@/data/vendors";
 import { formatDateFr, formatPrice } from "@/lib/utils";
 
 const REQUESTS = [
-  { id: "r1", vendor: "Atelier Roselia", event: "Mariage", date: "2026-09-12", status: "quoted", amount: 2400 },
-  { id: "r2", vendor: "Lumière Studio", event: "Mariage", date: "2026-09-12", status: "pending", amount: null },
+  { id: "r1", vendor: "Atelier Roselia", event: "Anniversaire", date: "2026-09-12", status: "quoted", amount: 2400 },
+  { id: "r2", vendor: "Lumière Studio", event: "Soirée privée", date: "2026-09-12", status: "pending", amount: null },
   { id: "r3", vendor: "Éclat Traiteur", event: "Mariage", date: "2026-09-12", status: "accepted", amount: 6800 },
 ];
 
@@ -20,18 +20,18 @@ export default function ClientDashboardPage() {
     <DashboardShell
       role="client"
       title="Bonjour, Marie 👋"
-      subtitle="Voici un aperçu de la préparation de votre événement."
+      subtitle="Voici un aperçu de la préparation de votre moment."
       actions={
         <Button asChild>
           <Link href="/prestataires">
-            Trouver un prestataire <ArrowRight className="h-4 w-4" />
+            Trouver un talent <ArrowRight className="h-4 w-4" />
           </Link>
         </Button>
       }
     >
       {/* Stats */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardStatCard label="Favoris" value="8" icon={Heart} hint="prestataires sauvegardés" />
+        <DashboardStatCard label="Favoris" value="8" icon={Heart} hint="talents sauvegardés" />
         <DashboardStatCard label="Demandes" value="3" icon={Send} trend={{ value: "+2", positive: true }} hint="ce mois" />
         <DashboardStatCard label="Réservations" value="1" icon={CalendarCheck} hint="confirmée" />
         <DashboardStatCard label="Messages" value="2" icon={MessageSquare} hint="non lus" />
@@ -73,7 +73,7 @@ export default function ClientDashboardPage() {
 
         {/* Event card */}
         <div className="card-premium rounded-2xl border-lystra-champagne/25 bg-lystra-plum p-6 text-lystra-cream">
-          <p className="text-xs uppercase tracking-[0.2em] text-lystra-champagne">Mon événement</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-lystra-champagne">Mon moment</p>
           <h3 className="mt-3 font-serif text-2xl">Mariage</h3>
           <div className="mt-4 space-y-2 text-sm text-lystra-cream/80">
             <p className="flex items-center gap-2">

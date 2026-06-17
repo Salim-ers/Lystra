@@ -9,7 +9,7 @@ export default function ClientFavoritesPage() {
     <DashboardShell
       role="client"
       title="Vos favoris"
-      subtitle="Les prestataires que vous avez sauvegardés pour votre événement."
+      subtitle="Les talents que vous avez sauvegardés pour vos moments."
     >
       <VendorGrid vendors={favorites} />
     </DashboardShell>
