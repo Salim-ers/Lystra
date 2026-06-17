@@ -59,6 +59,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${playfair.variable} ${inter.variable}`}>
       <body className="min-h-screen bg-lystra-ivory font-sans text-lystra-ink antialiased">
+        {/* Progressive enhancement: without JS, framer-motion's scroll/launch
+            reveals never fire, so force any reveal-gated content visible. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         {children}
       </body>
     </html>

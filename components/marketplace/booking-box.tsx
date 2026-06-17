@@ -1,9 +1,11 @@
 "use client";
 import * as React from "react";
-import { CalendarDays, MessageCircle, ShieldCheck, CheckCircle2, Zap } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { CalendarDays, ShieldCheck, CheckCircle2, Zap, Loader2 } from "lucide-react";
 import type { Vendor } from "@/types";
 import { formatPrice, cn } from "@/lib/utils";
 import { EVENT_TYPES } from "@/lib/constants";
+import { requestQuote, createBookingCheckout, type BookingInput } from "@/lib/actions/booking";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -18,11 +20,14 @@ import {
 } from "@/components/ui/dialog";
 
 export function BookingBox({ vendor }: { vendor: Vendor }) {
+  const router = useRouter();
   const [serviceId, setServiceId] = React.useState(vendor.services[0]?.id ?? "");
   const [date, setDate] = React.useState("");
   const [eventType, setEventType] = React.useState(vendor.eventTypes?.[0] ?? "");
   const [guests, setGuests] = React.useState("");
   const [opts, setOpts] = React.useState<Record<string, boolean>>({});
+  const [booking, setBooking] = React.useState(false);
+  const [bookError, setBookError] = React.useState<string | null>(null);
 
   const service = vendor.services.find((s) => s.id === serviceId);
   const perPerson = service?.priceUnit?.includes("personne");
@@ -34,6 +39,43 @@ export function BookingBox({ vendor }: { vendor: Vendor }) {
     .reduce((sum, o) => sum + (o.priceUnit?.includes("personne") ? o.price * qty : o.price), 0);
   const estimate = base + optionsTotal;
   const deposit = service?.deposit ?? Math.round(estimate * 0.3);
+
+  const selectedOptions = (vendor.options ?? []).filter((o) => opts[o.id]).map((o) => o.label);
+
+  function buildInput(message?: string): BookingInput {
+    return {
+      vendorSlug: vendor.slug,
+      serviceTitle: service?.title,
+      eventType: eventType || undefined,
+      eventDate: date || undefined,
+      guests: guests ? Number(guests) : undefined,
+      estimate,
+      message,
+      options: selectedOptions,
+    };
+  }
+
+  function goLogin() {
+    router.push(`/login?redirect=/prestataires/${vendor.slug}`);
+  }
+
+  async function handleBook() {
+    setBookError(null);
+    setBooking(true);
+    try {
+      const res = await createBookingCheckout(buildInput());
+      if ("url" in res) {
+        window.location.assign(res.url);
+        return;
+      }
+      if (res.needAuth) { goLogin(); return; }
+      setBookError(res.error);
+    } catch {
+      setBookError("Le paiement n'a pas pu être initié. Réessayez.");
+    } finally {
+      setBooking(false);
+    }
+  }
 
   return (
     <div className="rounded-3xl border border-lystra-champagne/30 bg-lystra-cream/90 p-6 shadow-card">
@@ -49,7 +91,7 @@ export function BookingBox({ vendor }: { vendor: Vendor }) {
         <div>
           <Label className="mb-1.5 block text-xs uppercase tracking-wide text-lystra-gray">Prestation / pack</Label>
           <Select value={serviceId} onValueChange={setServiceId}>
-            <SelectTrigger><SelectValue placeholder="Choisir" /></SelectTrigger>
+            <SelectTrigger aria-label="Prestation ou pack"><SelectValue placeholder="Choisir" /></SelectTrigger>
             <SelectContent>
               {vendor.services.map((s) => (
                 <SelectItem key={s.id} value={s.id}>
@@ -62,22 +104,22 @@ export function BookingBox({ vendor }: { vendor: Vendor }) {
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label className="mb-1.5 block text-xs uppercase tracking-wide text-lystra-gray">Date</Label>
+            <Label htmlFor="booking-date" className="mb-1.5 block text-xs uppercase tracking-wide text-lystra-gray">Date</Label>
             <div className="relative">
               <CalendarDays className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-lystra-champagne" />
-              <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="pl-9 [color-scheme:light]" />
+              <Input id="booking-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="pl-9 [color-scheme:light]" />
             </div>
           </div>
           <div>
-            <Label className="mb-1.5 block text-xs uppercase tracking-wide text-lystra-gray">Invités</Label>
-            <Input type="number" min={1} placeholder="50" value={guests} onChange={(e) => setGuests(e.target.value)} />
+            <Label htmlFor="booking-guests" className="mb-1.5 block text-xs uppercase tracking-wide text-lystra-gray">Invités</Label>
+            <Input id="booking-guests" type="number" min={1} placeholder="50" value={guests} onChange={(e) => setGuests(e.target.value)} />
           </div>
         </div>
 
         <div>
           <Label className="mb-1.5 block text-xs uppercase tracking-wide text-lystra-gray">Type d&apos;événement</Label>
           <Select value={eventType} onValueChange={setEventType}>
-            <SelectTrigger><SelectValue placeholder="Choisir" /></SelectTrigger>
+            <SelectTrigger aria-label="Type d'événement"><SelectValue placeholder="Choisir" /></SelectTrigger>
             <SelectContent>
               {EVENT_TYPES.map((e) => <SelectItem key={e} value={e}>{e}</SelectItem>)}
             </SelectContent>
@@ -115,13 +157,15 @@ export function BookingBox({ vendor }: { vendor: Vendor }) {
 
       <div className="mt-5 space-y-2.5">
         {vendor.bookingEnabled && (
-          <RequestDialog vendor={vendor} kind="book" date={date} eventType={eventType} service={service?.title} estimate={estimate} deposit={deposit} />
+          <Button variant="champagne" className="w-full gap-2" onClick={handleBook} disabled={booking}>
+            {booking ? <Loader2 className="h-4 w-4 animate-spin" /> : <Zap className="h-4 w-4" />}
+            {booking ? "Redirection vers le paiement…" : `Réserver · acompte ${formatPrice(deposit)}`}
+          </Button>
         )}
-        <RequestDialog vendor={vendor} kind="quote" date={date} eventType={eventType} service={service?.title} estimate={estimate} deposit={deposit} />
-        <Button variant="ghost" className="w-full gap-2 text-lystra-plum">
-          <MessageCircle className="h-4 w-4" /> Envoyer un message
-        </Button>
+        <QuoteDialog vendor={vendor} buildInput={buildInput} onNeedAuth={goLogin} service={service?.title} date={date} eventType={eventType} />
       </div>
+
+      {bookError && <p className="mt-3 text-center text-xs text-destructive">{bookError}</p>}
 
       <p className="mt-4 flex items-center justify-center gap-1.5 text-center text-xs text-lystra-gray">
         <ShieldCheck className="h-3.5 w-3.5 text-lystra-champagne" />
@@ -131,27 +175,41 @@ export function BookingBox({ vendor }: { vendor: Vendor }) {
   );
 }
 
-function RequestDialog({
-  vendor, kind, date, eventType, service, estimate, deposit,
+function QuoteDialog({
+  vendor, buildInput, onNeedAuth, service, date, eventType,
 }: {
   vendor: Vendor;
-  kind: "quote" | "book";
+  buildInput: (message?: string) => BookingInput;
+  onNeedAuth: () => void;
+  service?: string;
   date: string;
   eventType?: string;
-  service?: string;
-  estimate: number;
-  deposit: number;
 }) {
+  const [open, setOpen] = React.useState(false);
   const [sent, setSent] = React.useState(false);
+  const [pending, setPending] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
   const [message, setMessage] = React.useState("");
-  const label = kind === "quote" ? "Demander un devis" : "Réserver";
+
+  async function send() {
+    setError(null);
+    setPending(true);
+    try {
+      const res = await requestQuote(buildInput(message));
+      if (res.ok) { setSent(true); return; }
+      if (res.needAuth) { setOpen(false); onNeedAuth(); return; }
+      setError(res.error);
+    } catch {
+      setError("Une erreur est survenue. Réessayez.");
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
-    <Dialog onOpenChange={(o) => !o && setSent(false)}>
+    <Dialog open={open} onOpenChange={(o) => { setOpen(o); if (!o) { setSent(false); setError(null); } }}>
       <DialogTrigger asChild>
-        <Button variant={kind === "book" ? "champagne" : "default"} className={cn("w-full", kind === "book" && "gap-2")}>
-          {kind === "book" && <Zap className="h-4 w-4" />}{label}
-        </Button>
+        <Button id="open-quote-dialog" variant="default" className="w-full">Demander un devis</Button>
       </DialogTrigger>
       <DialogContent>
         {sent ? (
@@ -166,28 +224,27 @@ function RequestDialog({
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle>{label} — {vendor.businessName}</DialogTitle>
+              <DialogTitle>Demander un devis — {vendor.businessName}</DialogTitle>
               <DialogDescription>
                 {service ? `Prestation : ${service}. ` : ""}{eventType ? `${eventType}. ` : ""}
-                {date ? `Le ${date}. ` : ""}
-                {kind === "book"
-                  ? `Acompte de ${formatPrice(deposit)} (estimation ${formatPrice(estimate)}).`
-                  : "Précisez vos besoins ci-dessous."}
+                {date ? `Le ${date}. ` : ""}Précisez vos besoins ci-dessous.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-3">
-              <Label htmlFor="msg" className="text-sm">Votre message</Label>
+              <Label htmlFor="quote-msg" className="text-sm">Votre message</Label>
               <Textarea
-                id="msg"
+                id="quote-msg"
                 rows={4}
                 placeholder="Décrivez votre événement, vos envies, le lieu…"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
+              {error && <p className="text-xs text-destructive">{error}</p>}
             </div>
             <DialogFooter>
-              <Button variant="champagne" className="w-full" onClick={() => setSent(true)}>
-                {kind === "book" ? `Réserver · acompte ${formatPrice(deposit)}` : "Envoyer ma demande"}
+              <Button variant="champagne" className="w-full gap-2" onClick={send} disabled={pending}>
+                {pending && <Loader2 className="h-4 w-4 animate-spin" />}
+                {pending ? "Envoi…" : "Envoyer ma demande"}
               </Button>
             </DialogFooter>
           </>

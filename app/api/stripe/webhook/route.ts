@@ -30,9 +30,63 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
+
+        // ---- Acompte de réservation (paiement client) ----
+        if (session.metadata?.kind === "booking_deposit") {
+          const bookingId = session.metadata.bookingId;
+          const paymentIntentId = (session.payment_intent as string) ?? null;
+          if (bookingId) {
+            await supabase
+              .from("bookings")
+              .update({
+                status: "confirmed",
+                payment_status: "deposit_paid",
+                stripe_payment_intent_id: paymentIntentId,
+              })
+              .eq("id", bookingId);
+            await supabase
+              .from("payments")
+              .update({ status: "succeeded", stripe_payment_intent_id: paymentIntentId })
+              .eq("stripe_checkout_id", session.id);
+
+            // Notifie client + prestataire owner (si présent).
+            const booking = await supabase
+              .from("bookings")
+              .select("client_id, vendor_id")
+              .eq("id", bookingId)
+              .maybeSingle();
+            if (booking.data?.client_id) {
+              await supabase.from("notifications").insert({
+                user_id: booking.data.client_id,
+                type: "booking_update",
+                title: "Réservation confirmée",
+                body: "Votre acompte a bien été reçu. Votre réservation est confirmée.",
+                link: "/dashboard/client/reservations",
+              });
+            }
+            if (booking.data?.vendor_id) {
+              const owner = await supabase
+                .from("vendors")
+                .select("user_id")
+                .eq("id", booking.data.vendor_id)
+                .maybeSingle();
+              if (owner.data?.user_id) {
+                await supabase.from("notifications").insert({
+                  user_id: owner.data.user_id,
+                  type: "booking_update",
+                  title: "Nouvelle réservation",
+                  body: "Un client vient de confirmer une réservation avec acompte.",
+                  link: "/dashboard/vendor/reservations",
+                });
+              }
+            }
+          }
+          break;
+        }
+
+        // ---- Abonnement prestataire ----
         const vendorId = session.metadata?.vendorId;
         const plan = session.metadata?.plan;
-        // Activate the vendor subscription record.
         await supabase
           .from("subscriptions")
           .upsert({
@@ -71,14 +125,11 @@ export async function POST(req: Request) {
 
       case "payment_intent.succeeded": {
         const pi = event.data.object as Stripe.PaymentIntent;
-        // Mark the related booking as paid.
+        // Le statut de la réservation (confirmé/acompte payé) est géré dans
+        // checkout.session.completed. Ici on confirme seulement le paiement.
         await supabase
           .from("payments")
           .update({ status: "succeeded" })
-          .eq("stripe_payment_intent_id", pi.id);
-        await supabase
-          .from("bookings")
-          .update({ status: "paid" })
           .eq("stripe_payment_intent_id", pi.id);
         break;
       }

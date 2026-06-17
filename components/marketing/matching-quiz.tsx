@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   PartyPopper, CalendarDays, MapPin, Wallet, Sparkles, Users,
-  Home, ArrowLeft, ArrowRight, Wand2, SlidersHorizontal, Boxes,
+  Home, ArrowLeft, ArrowRight, RotateCcw, SlidersHorizontal, Boxes,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CITIES, EVENT_TYPES } from "@/lib/constants";
@@ -80,7 +80,7 @@ export function MatchingQuiz() {
     [],
   );
 
-  /* --- Recommandations calculées ------------------------------------ */
+  /* --- Sélection composée à partir des réponses --------------------- */
   const recommendations = React.useMemo<Vendor[]>(() => {
     let pool = answers.event ? getVendorsByEvent(answers.event) : VENDORS;
 
@@ -100,8 +100,20 @@ export function MatchingQuiz() {
       if (inBudget.length >= 3) pool = inBudget;
     }
 
+    // Lieu de la prestation (souple, comme la ville et le budget)
+    if (answers.place) {
+      const matchesPlace = (v: Vendor) => {
+        if (answers.place === "À domicile") return v.homeService;
+        if (answers.place === "En studio") return v.studioService;
+        if (answers.place === "Sur le lieu") return v.onSiteService;
+        return true;
+      };
+      const inPlace = pool.filter(matchesPlace);
+      if (inPlace.length >= 3) pool = inPlace;
+    }
+
     return [...pool].sort((a, b) => b.averageRating - a.averageRating).slice(0, 6);
-  }, [answers.event, answers.city, answers.budget]);
+  }, [answers.event, answers.city, answers.budget, answers.place]);
 
   /* --- Navigation vers la marketplace ------------------------------- */
   const refineHref = React.useMemo(() => {
@@ -316,7 +328,7 @@ export function MatchingQuiz() {
               disabled={!canAdvance[step]}
               onClick={() => setSubmitted(true)}
             >
-              <Wand2 className="h-4 w-4" /> Voir mes recommandations
+              Découvrir notre sélection <ArrowRight className="h-4 w-4" />
             </Button>
           ) : (
             <Button
@@ -464,16 +476,19 @@ function QuizResult({
       <div className="text-center">
         <p className="eyebrow justify-center">
           <RibbonMark withDots={false} className="h-4 w-4 text-lystra-champagne" />
-          Votre sélection sur mesure
+          Une sélection composée pour vous
         </p>
         <h2 className="display mt-3 text-3xl text-lystra-ink sm:text-4xl">
-          Nos recommandations pour vous
+          Les talents que nous avons réunis
         </h2>
         {summary && (
           <p className="mx-auto mt-3 max-w-xl text-pretty text-base text-lystra-gray">
             {summary}
           </p>
         )}
+        <p className="mx-auto mt-2 max-w-lg text-sm text-lystra-gray/90">
+          Un premier aperçu — affinez le style et les détails directement sur la marketplace.
+        </p>
       </div>
 
       {/* Encart équipe complète -> packs */}
@@ -523,7 +538,7 @@ function QuizResult({
           <SlidersHorizontal className="h-4 w-4" /> Affiner sur la marketplace
         </Button>
         <Button type="button" variant="ghost" size="lg" onClick={onRestart}>
-          <Wand2 className="h-4 w-4" /> Recommencer le test
+          <RotateCcw className="h-4 w-4" /> Recommencer
         </Button>
       </div>
     </div>

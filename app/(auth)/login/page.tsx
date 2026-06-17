@@ -1,27 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
-import { Mail, Lock } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Mail, Lock, Loader2 } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 
-export default function LoginPage() {
-  const [submitting, setSubmitting] = useState(false);
+function LoginForm() {
+  const router = useRouter();
+  const params = useSearchParams();
+  const redirect = params.get("redirect") || "/dashboard/client";
 
-  function onSubmit(e: React.FormEvent) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError(null);
     setSubmitting(true);
-    setTimeout(() => setSubmitting(false), 900);
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setError("Email ou mot de passe incorrect.");
+        setSubmitting(false);
+        return;
+      }
+      router.push(redirect);
+      router.refresh();
+    } catch {
+      setError("Connexion impossible. Vérifiez votre configuration Supabase.");
+      setSubmitting(false);
+    }
+  }
+
+  async function withGoogle() {
+    try {
+      const supabase = createClient();
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: `${window.location.origin}${redirect}` },
+      });
+    } catch {
+      setError("Connexion Google indisponible.");
+    }
   }
 
   return (
     <div>
       <h1 className="font-serif text-3xl text-lystra-ink">Bon retour sur Lystra</h1>
       <p className="mt-2 text-sm text-lystra-gray">
-        Connectez-vous pour retrouver vos prestataires et vos réservations.
+        Connectez-vous pour retrouver vos talents et vos réservations.
       </p>
 
       <form onSubmit={onSubmit} className="mt-8 space-y-5">
@@ -29,7 +64,8 @@ export default function LoginPage() {
           <Label htmlFor="email">Email</Label>
           <div className="relative">
             <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-lystra-gray" />
-            <Input id="email" type="email" placeholder="vous@exemple.com" className="pl-10" required />
+            <Input id="email" type="email" placeholder="vous@exemple.com" className="pl-10" required
+              value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
         </div>
 
@@ -42,11 +78,15 @@ export default function LoginPage() {
           </div>
           <div className="relative">
             <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-lystra-gray" />
-            <Input id="password" type="password" placeholder="••••••••" className="pl-10" required />
+            <Input id="password" type="password" placeholder="••••••••" className="pl-10" required
+              value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
         </div>
 
-        <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+        {error && <p className="text-sm text-destructive">{error}</p>}
+
+        <Button type="submit" size="lg" className="w-full gap-2" disabled={submitting}>
+          {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
           {submitting ? "Connexion…" : "Se connecter"}
         </Button>
       </form>
@@ -57,7 +97,7 @@ export default function LoginPage() {
         <Separator className="flex-1" />
       </div>
 
-      <Button variant="outline" size="lg" className="w-full">
+      <Button variant="outline" size="lg" className="w-full" onClick={withGoogle} type="button">
         Continuer avec Google
       </Button>
 
@@ -68,5 +108,13 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }
